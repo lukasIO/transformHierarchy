@@ -1,31 +1,18 @@
-import * as webglUtils from "lib/webgl-utils";
-import * as webglLessonsUI from "lib/webgl-lessons-ui";
+
 import * as robot from "robot";
 
 export class Main {
 
-    canvas: HTMLCanvasElement;
-    gl: WebGLRenderingContext;
-
-    scale: GLfloat[];
-    translation: GLfloat[];
-    angleInRadians: GLfloat;
-    color: GLfloat[];
-    program: WebGLProgram;
-    positionLocation: number;
-    positionBuffer: WebGLBuffer;
-    matrixLocation: WebGLUniformLocation;
-    colorLocation: WebGLUniformLocation;
-    resolutionLocation: WebGLUniformLocation;
 
 
 
     run() {
         console.log("starting");
+
         var rob = new robot.Robot();
         rob.init();
 
-
+        /*
         this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
         this.gl = this.canvas.getContext("webgl");
 
@@ -66,6 +53,7 @@ export class Main {
         webglLessonsUI.setupSlider("#scaleY", { value: this.scale[1], slide: (ev: Event, ui) => { return this.updateScale(1, ev, ui); }, min: -5, max: 5, step: 0.01, precision: 2 });
 
         console.log(this);
+        */
 
     }
 

@@ -1,45 +1,54 @@
-define(["require", "exports", "lib/webgl-utils", "lib/webgl-lessons-ui", "robot"], function (require, exports, webglUtils, webglLessonsUI, robot) {
+define(["require", "exports", "robot"], function (require, exports, robot) {
     "use strict";
     var Main = (function () {
         function Main() {
         }
         Main.prototype.run = function () {
-            var _this = this;
             console.log("starting");
             var rob = new robot.Robot();
             rob.init();
-            this.canvas = document.getElementById("canvas");
+            /*
+            this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
             this.gl = this.canvas.getContext("webgl");
+    
             if (!this.gl) {
                 return;
             }
+    
             // setup GLSL program
             this.program = webglUtils.createProgramFromScripts(this.gl, ["2d-vertex-shader", "2d-fragment-shader"]);
             // look up where the vertex data needs to go.
             this.positionLocation = this.gl.getAttribLocation(this.program, "a_position");
+    
             // lookup uniforms
             this.resolutionLocation = this.gl.getUniformLocation(this.program, "u_resolution");
             this.colorLocation = this.gl.getUniformLocation(this.program, "u_color");
             this.matrixLocation = this.gl.getUniformLocation(this.program, "u_matrix");
+    
             // Create a buffer to put positions in
             this.positionBuffer = this.gl.createBuffer();
             // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
             this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
             // Put geometry data into buffer
             setGeometry(this.gl);
+    
             this.translation = [1, 1];
             this.angleInRadians = 0;
             this.scale = [0.85, 0.85];
             this.color = [Math.random(), Math.random(), Math.random(), 1];
+    
             this.drawScene();
-            var self = this;
+            let self = this;
+    
             // Setup a ui.
             webglLessonsUI.setupSlider("#x", { value: this.translation[0], slide: this.updatePosition(0), max: this.gl.canvas.width });
             webglLessonsUI.setupSlider("#y", { value: this.translation[1], slide: this.updatePosition(1), max: this.gl.canvas.height });
-            webglLessonsUI.setupSlider("#angle", { slide: function (ev, ui) { _this.updateAngle(ev, ui); }, max: 360 });
-            webglLessonsUI.setupSlider("#scaleX", { value: this.scale[0], slide: function (ev, ui) { return _this.updateScale(0, ev, ui); }, min: -5, max: 5, step: 0.01, precision: 2 });
-            webglLessonsUI.setupSlider("#scaleY", { value: this.scale[1], slide: function (ev, ui) { return _this.updateScale(1, ev, ui); }, min: -5, max: 5, step: 0.01, precision: 2 });
+            webglLessonsUI.setupSlider("#angle", { slide: (ev: Event, ui) => { this.updateAngle(ev, ui); }, max: 360 });
+            webglLessonsUI.setupSlider("#scaleX", { value: this.scale[0], slide: (ev: Event, ui) => { return this.updateScale(0, ev, ui); }, min: -5, max: 5, step: 0.01, precision: 2 });
+            webglLessonsUI.setupSlider("#scaleY", { value: this.scale[1], slide: (ev: Event, ui) => { return this.updateScale(1, ev, ui); }, min: -5, max: 5, step: 0.01, precision: 2 });
+    
             console.log(this);
+            */
         };
         Main.prototype.updatePosition = function (index) {
             return function (event, ui) {

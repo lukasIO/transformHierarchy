@@ -11,8 +11,6 @@ require.config({
         jquery: {
             exports: '$'
         }
-
-
     }
 });
 
