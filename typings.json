@@ -1,0 +1,5 @@
+{
+  "globalDependencies": {
+    "requirejs": "registry:dt/requirejs#2.1.20+20160921164505"
+  }
+}
