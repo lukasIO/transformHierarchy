@@ -1,6 +1,7 @@
 import "lib/three";
 import "lib/OrbitControls";
 import * as dat from "lib/dat.gui.min";
+import { Scenegraph2D } from "scenegraph";
 
 export class Robot {
 
@@ -12,7 +13,20 @@ export class Robot {
     camera: THREE.PerspectiveCamera;
     renderer: THREE.WebGLRenderer;
     cube: THREE.Mesh;
+    legsAndFeet: THREE.Object3D;
     legLeft: THREE.Mesh;
+    legRight: THREE.Mesh;
+    legs: THREE.Object3D;
+    feet: THREE.Object3D;
+    footLeft: THREE.Mesh;
+    footRight: THREE.Mesh;
+    armLeft: THREE.Mesh;
+    armRight: THREE.Mesh;
+
+
+    gcontrols = null;
+    cameracontrols = null;
+    selectedNode: THREE.Object3D;
 
     init() {
         //initialize components
@@ -28,20 +42,46 @@ export class Robot {
 
         this.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-        var controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+        this.cameracontrols = new THREE.OrbitControls(this.camera, this.renderer.domElement);
 
         var bodyGeo = new THREE.BoxGeometry(1, 1, 1);
         var material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
         this.cube = new THREE.Mesh(bodyGeo, material);
         this.cube.matrixAutoUpdate = false;
 
-        var legGeo = new THREE.BoxGeometry(0.5, 1, 0.5);
+        var limbGeo = new THREE.BoxGeometry(0.5, 1, 0.5);
 
-        this.legLeft = new THREE.Mesh(legGeo, material);
-        this.legLeft.position.y = -1;
-        this.legLeft.position.x = -0.5;
+        this.legLeft = new THREE.Mesh(limbGeo, material);
+        this.footLeft = new THREE.Mesh(limbGeo, material);
 
-        this.cube.add(this.legLeft);
+        this.legRight = new THREE.Mesh(limbGeo, material);
+        this.footRight = new THREE.Mesh(limbGeo, material);
+
+        this.legLeft.position.set(-0.5, 0, 0);
+        this.legRight.position.set(0.5, 0, 0);
+
+        this.footLeft.position.set(-0.5, 0, 0);
+        this.footRight.position.set(0.5, 0, 0);
+
+        this.legs = new THREE.Object3D();
+        this.feet = new THREE.Object3D();
+        this.legsAndFeet = new THREE.Group();
+        this.legs.add(this.legLeft);
+        this.legs.add(this.legRight);
+
+        this.feet.add(this.footLeft);
+        this.feet.add(this.footRight);
+
+        this.legs.position.set(0, -1, 0);
+        this.feet.position.set(0, -1.5, 0);
+        this.feet.children.forEach((child) => child.rotateZ(0.9))
+
+        this.legsAndFeet.add(this.legs);
+        this.legsAndFeet.add(this.feet);
+
+        this.cube.add(this.legsAndFeet);
+
+
 
         var pointLight = new THREE.PointLight(0xffffff);
         pointLight.position.set(0, 300, 200);
@@ -50,18 +90,19 @@ export class Robot {
         var ambientLight = new THREE.AmbientLight(0x111111);
         this.scene.add(ambientLight);
 
-        var gcontrols = new function () {
+        this.gcontrols = new function () {
             this.theta1 = 0.01;
             this.theta2 = 0.01;
-            this.wireshow = false;
+
         }
 
         var gui = new dat.GUI();
-        gui.add(gcontrols, 'theta1', -1.5, 1.5);
-        gui.add(gcontrols, 'theta2', -1.5, 1.5);
-        gui.add(gcontrols, 'wireshow');
+        gui.add(this.gcontrols, 'theta1', -1.5, 1.5);
+        gui.add(this.gcontrols, 'theta2', -1.5, 1.5);
 
-
+        var test = new Scenegraph2D(this.cube);
+        test.init();
+        test.show();
 
 
 
@@ -88,10 +129,25 @@ export class Robot {
     }
 
     render(self: Robot) {
+
+        self.renderer.render(self.scene, self.camera);
+        self.update();
+
         requestAnimationFrame(() => self.render(self));
 
-        this.renderer.render(self.scene, self.camera);
     }
+
+    update() {
+        this.cameracontrols.update();
+
+        // have not yet found a way to back-control the sliders ...
+        // display style (floating poitn)... solved
+        if (this.selectedNode)
+            this.selectedNode.setRotationFromEuler(new THREE.Euler(this.gcontrols.theta1, this.gcontrols.theta2, 0));
+        //theta2 = gcontrols.theta2;
+
+    }
+
 }
 
 
