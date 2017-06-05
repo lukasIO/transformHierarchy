@@ -6,6 +6,7 @@ define(["require", "exports"], function (require, exports) {
             this.hasTransform = false;
             this.children = [];
             this.depth = 0;
+            this.transformType = 0;
             this.depth = hierarchydepth;
         }
         return SceneNode;

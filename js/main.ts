@@ -5,55 +5,10 @@ export class Main {
 
 
 
-
     run() {
         console.log("starting");
-
         var rob = new robot.Robot();
         rob.init();
-
-        /*
-        this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
-        this.gl = this.canvas.getContext("webgl");
-
-        if (!this.gl) {
-            return;
-        }
-
-        // setup GLSL program
-        this.program = webglUtils.createProgramFromScripts(this.gl, ["2d-vertex-shader", "2d-fragment-shader"]);
-        // look up where the vertex data needs to go.
-        this.positionLocation = this.gl.getAttribLocation(this.program, "a_position");
-
-        // lookup uniforms
-        this.resolutionLocation = this.gl.getUniformLocation(this.program, "u_resolution");
-        this.colorLocation = this.gl.getUniformLocation(this.program, "u_color");
-        this.matrixLocation = this.gl.getUniformLocation(this.program, "u_matrix");
-
-        // Create a buffer to put positions in
-        this.positionBuffer = this.gl.createBuffer();
-        // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
-        // Put geometry data into buffer
-        setGeometry(this.gl);
-
-        this.translation = [1, 1];
-        this.angleInRadians = 0;
-        this.scale = [0.85, 0.85];
-        this.color = [Math.random(), Math.random(), Math.random(), 1];
-
-        this.drawScene();
-        let self = this;
-
-        // Setup a ui.
-        webglLessonsUI.setupSlider("#x", { value: this.translation[0], slide: this.updatePosition(0), max: this.gl.canvas.width });
-        webglLessonsUI.setupSlider("#y", { value: this.translation[1], slide: this.updatePosition(1), max: this.gl.canvas.height });
-        webglLessonsUI.setupSlider("#angle", { slide: (ev: Event, ui) => { this.updateAngle(ev, ui); }, max: 360 });
-        webglLessonsUI.setupSlider("#scaleX", { value: this.scale[0], slide: (ev: Event, ui) => { return this.updateScale(0, ev, ui); }, min: -5, max: 5, step: 0.01, precision: 2 });
-        webglLessonsUI.setupSlider("#scaleY", { value: this.scale[1], slide: (ev: Event, ui) => { return this.updateScale(1, ev, ui); }, min: -5, max: 5, step: 0.01, precision: 2 });
-
-        console.log(this);
-        */
 
     }
 
@@ -64,78 +19,6 @@ export class Main {
         }
     }
 
-    updateAngle(event, ui) {
-        var angleInDegrees = 360 - ui.value;
-        this.angleInRadians = angleInDegrees * Math.PI / 180;
-        this.drawScene();
-    }
-
-    updateScale(index, event, ui) {
-        this.scale[index] = ui.value;
-        this.drawScene();
-    }
-
-    // Draw the scene.
-    drawScene() {
-        console.log("scene being drawn");
-        webglUtils.resizeCanvasToDisplaySize(this.gl.canvas);
-
-        // Tell WebGL how to convert from clip space to pixels
-        this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
-
-        // Clear the canvas.
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
-
-        // Tell it to use our program (pair of shaders)
-        this.gl.useProgram(this.program);
-
-        // Turn on the attribute
-        this.gl.enableVertexAttribArray(this.positionLocation);
-
-        // Bind the position buffer.
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
-
-        // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-        var size = 2;          // 2 components per iteration
-        var type = this.gl.FLOAT;   // the data is 32bit floats
-        var normalize = false; // don't normalize the data
-        var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-        var offset = 0;        // start at the beginning of the buffer
-        this.gl.vertexAttribPointer(
-            this.positionLocation, size, type, normalize, stride, offset)
-
-
-
-        // set the resolution
-        this.gl.uniform2f(this.resolutionLocation, this.gl.canvas.width, this.gl.canvas.height);
-
-        // set the color
-        this.gl.uniform4fv(this.colorLocation, this.color);
-
-        // Compute the matrices
-        var translationMatrix = m3.translation(this.translation[0], this.translation[1]);
-        var rotationMatrix = m3.rotation(this.angleInRadians);
-        var scaleMatrix = m3.scaling(this.scale[0], this.scale[1]);
-
-        // Starting Matrix.
-        var matrix = m3.identity();
-
-        for (var i = 0; i < 5; ++i) {
-            // Multiply the matrices.
-            matrix = m3.multiply(matrix, translationMatrix);
-            matrix = m3.multiply(matrix, rotationMatrix);
-            matrix = m3.multiply(matrix, scaleMatrix);
-
-            // Set the matrix.
-            this.gl.uniformMatrix3fv(this.matrixLocation, false, matrix);
-
-            // Draw the geometry.
-            var primitiveType = this.gl.TRIANGLES;
-            var offset = 0;
-            var count = 6;  // 6 triangles in the 'F', 3 points per triangle
-            this.gl.drawArrays(primitiveType, offset, count);
-        }
-    }
 }
 
 export var m3 = {
@@ -206,20 +89,7 @@ export var m3 = {
     },
 };
 
-// Fill the buffer with the values that define a rectangle
-export function setGeometry(gl) {
-    gl.bufferData(
-        gl.ARRAY_BUFFER,
-        new Float32Array([
-            10, 20,
-            80, 20,
-            10, 30,
-            10, 30,
-            80, 20,
-            80, 30
-        ]),
-        gl.STATIC_DRAW);
-}
+
 
 
 

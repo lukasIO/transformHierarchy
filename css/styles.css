@@ -1,0 +1,46 @@
+.root {
+    width: 50%;
+    float: left;
+    
+}
+
+.child {
+    display: flex;
+   
+    background-color: red;
+    border: 1px dashed blue; 
+    width: 40%;
+    height: 30px;
+    margin: auto;
+    margin-top: 50px;
+    
+
+    
+    
+    
+    /*float: left;
+    clear: both;*/
+    
+    
+}
+
+.depth_1 {
+
+}
+
+.depth_2 {
+
+}
+
+.depth_3 {
+
+
+}
+
+.depth_4 {
+
+}
+
+.depth_5 {
+
+}

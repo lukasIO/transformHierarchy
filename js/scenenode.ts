@@ -7,6 +7,8 @@ export class SceneNode {
     hasTransform: boolean = false;
     children: SceneNode[] = [];
     depth: number = 0;
+    transformType: number = 0;
+    threeObject: THREE.Object3D;
 
 }
 
