@@ -4,15 +4,28 @@
     
 }
 
+connection {
+    border: 5px solid #b51c29;
+    border-radius: 10px;
+}
+
+.circle {
+	border-radius: 50%;
+	width: 60px;
+	height: 60px; 
+    border: 1px dashed blue;
+	
+}
+
 .child {
     display: flex;
    
-    background-color: red;
+    
     border: 1px dashed blue; 
     width: 40%;
-    height: 30px;
+    height: 60px;
     margin: auto;
-    margin-top: 50px;
+    margin-top: 80px;
     
 
     

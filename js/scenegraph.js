@@ -4,11 +4,14 @@ define(["require", "exports", "scenenode"], function (require, exports, scenenod
         function Scenegraph2D(root) {
             this.graph = [];
             this.container = document.createElement("div");
+            this.unselectedMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
+            this.selectedMat = new THREE.MeshLambertMaterial({ color: 0xff00ff });
             this._root = root;
         }
         Scenegraph2D.prototype.init = function () {
             this.graph = this.traverseGraph(this._root, 0);
             this.container.classList.add("graphContainer");
+            this.container.id = "graph";
             document.body.appendChild(this.container);
         };
         Scenegraph2D.prototype.traverseGraph = function (obj, depth) {
@@ -42,6 +45,7 @@ define(["require", "exports", "scenenode"], function (require, exports, scenenod
         Scenegraph2D.prototype.show = function () {
             //this.printGraphRecursive(this.graph);
             this.createGraphRecursive(this.graph, this.container);
+            $('.child').connections('update');
         };
         Scenegraph2D.prototype.printGraphRecursive = function (_nodes) {
             var _this = this;
@@ -59,14 +63,39 @@ define(["require", "exports", "scenenode"], function (require, exports, scenenod
                 console.log(node);
                 var el = document.createElement('button');
                 el.innerHTML = String(node.transformType);
+                if (node.transformType == 2) {
+                    el.classList.add("circle");
+                }
                 el.classList.add("child");
                 el.classList.add("depth_" + node.depth);
                 el.addEventListener('click', function (event) {
                     _this.selectedNode = node;
+                    _this.selectedNode.updateControls = true;
+                    console.log(_this.selectedNode);
+                    //prevent parent divs from firing click events
+                    event.stopPropagation();
+                    //change material/color in order to view the affected nodes in canvas
+                    _this.setMaterial(_this._root, _this.unselectedMat);
+                    _this.setMaterial(_this.selectedNode.threeObject, _this.selectedMat);
                 });
                 first = false;
                 _parent.appendChild(el);
+                $(_parent).connections({ to: $(el) });
                 _this.createGraphRecursive(node.children, el);
+            });
+        };
+        Scenegraph2D.prototype.setMaterial = function (obj, material) {
+            var _this = this;
+            if (obj.type == "Mesh") {
+                var mesh = obj;
+                mesh.material = material;
+            }
+            obj.children.forEach(function (child) {
+                if (child.type == "Mesh") {
+                    var mesh = child;
+                    mesh.material = material;
+                }
+                _this.setMaterial(child, material);
             });
         };
         Scenegraph2D.prototype.lineToChild = function () {

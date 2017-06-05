@@ -11,13 +11,18 @@ export class Scenegraph2D {
     container: HTMLDivElement = document.createElement("div");
     selectedNode: SceneNode;
 
+    unselectedMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    selectedMat = new THREE.MeshLambertMaterial({ color: 0xff00ff });
+
 
 
     init() {
         this.graph = this.traverseGraph(this._root, 0);
 
         this.container.classList.add("graphContainer");
+        this.container.id = "graph";
         document.body.appendChild(this.container);
+
 
 
 
@@ -74,6 +79,8 @@ export class Scenegraph2D {
         //this.printGraphRecursive(this.graph);
         this.createGraphRecursive(this.graph, this.container);
 
+        $('.child').connections('update');
+
     }
 
     printGraphRecursive(_nodes: SceneNode[]) {
@@ -93,20 +100,52 @@ export class Scenegraph2D {
 
             let el: HTMLButtonElement = document.createElement('button');
             el.innerHTML = String(node.transformType);
+            if (node.transformType == 2) {
+                el.classList.add("circle")
+            }
             el.classList.add("child");
             el.classList.add("depth_" + node.depth);
+
             el.addEventListener('click', (event) => {
+
                 this.selectedNode = node;
+                this.selectedNode.updateControls = true;
+                console.log(this.selectedNode);
+
+                //prevent parent divs from firing click events
+                event.stopPropagation();
+
+                //change material/color in order to view the affected nodes in canvas
+                this.setMaterial(this._root, this.unselectedMat);
+                this.setMaterial(this.selectedNode.threeObject, this.selectedMat);
+
             });
 
             first = false;
             _parent.appendChild(el);
+            $(_parent).connections({ to: $(el) });
 
 
 
             this.createGraphRecursive(node.children, el);
 
         });
+    }
+
+    setMaterial(obj: THREE.Object3D, material: THREE.Material) {
+        if (obj.type == "Mesh") {
+            let mesh = obj as THREE.Mesh;
+            mesh.material = material;
+        }
+        obj.children.forEach((child) => {
+            if (child.type == "Mesh") {
+                let mesh = child as THREE.Mesh;
+                mesh.material = material;
+            }
+            this.setMaterial(child, material);
+
+        });
+
     }
 
     lineToChild() {
