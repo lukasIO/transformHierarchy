@@ -1,3 +1,7 @@
+/*
+creates a HTML scenegraph from a THREEjs node hierarchy
+with click callbacks to select affected 3d tree
+*/
 define(["require", "exports", "scenenode"], function (require, exports, scenenode_1) {
     "use strict";
     var Scenegraph2D = (function () {
@@ -23,7 +27,6 @@ define(["require", "exports", "scenenode"], function (require, exports, scenenod
                 var node = new scenenode_1.SceneNode(depth);
                 node.threeObject = child;
                 node.children = _this.traverseGraph(child, depth);
-                console.log(child.type);
                 switch (child.type) {
                     case "Mesh":
                         node.transformType = 0;
@@ -57,10 +60,7 @@ define(["require", "exports", "scenenode"], function (require, exports, scenenod
         };
         Scenegraph2D.prototype.createGraphRecursive = function (_nodes, _parent) {
             var _this = this;
-            var first = true;
             _nodes.forEach(function (node) {
-                console.log(node.depth);
-                console.log(node);
                 var el = document.createElement('button');
                 el.innerHTML = String(node.transformType);
                 if (node.transformType == 2) {
@@ -78,7 +78,6 @@ define(["require", "exports", "scenenode"], function (require, exports, scenenod
                     _this.setMaterial(_this._root, _this.unselectedMat);
                     _this.setMaterial(_this.selectedNode.threeObject, _this.selectedMat);
                 });
-                first = false;
                 _parent.appendChild(el);
                 $(_parent).connections({ to: $(el) });
                 _this.createGraphRecursive(node.children, el);
@@ -90,6 +89,7 @@ define(["require", "exports", "scenenode"], function (require, exports, scenenod
                 var mesh = obj;
                 mesh.material = material;
             }
+            ;
             obj.children.forEach(function (child) {
                 if (child.type == "Mesh") {
                     var mesh = child;
@@ -97,8 +97,6 @@ define(["require", "exports", "scenenode"], function (require, exports, scenenod
                 }
                 _this.setMaterial(child, material);
             });
-        };
-        Scenegraph2D.prototype.lineToChild = function () {
         };
         return Scenegraph2D;
     }());

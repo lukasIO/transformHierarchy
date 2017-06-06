@@ -1,21 +1,17 @@
 import "lib/three";
-import "lib/OrbitControls";
-import * as dat from "lib/dat.gui.min";
-import { Scenegraph2D } from "scenegraph";
+
+
 
 
 export class Robot {
 
     constructor() {
+        this.init();
 
     }
-    sceneGraph: Scenegraph2D;
-    scene: THREE.Scene;
-    camera: THREE.PerspectiveCamera;
-    renderer: THREE.WebGLRenderer;
 
     //robot parts 
-    robot: THREE.Group = new THREE.Group();
+    root: THREE.Group = new THREE.Group();
 
     footLeft = new THREE.Mesh();
     footRight = new THREE.Mesh();
@@ -37,27 +33,9 @@ export class Robot {
 
     body = new THREE.Object3D();
 
-    gui = null;
 
-
-    gcontrols = null;
-    cameracontrols = null;
-    selectedNode: THREE.Object3D;
 
     init() {
-        //initialize components
-        this.scene = new THREE.Scene();
-
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-
-        this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setSize(window.innerWidth / 2, window.innerHeight / 2);
-        document.body.appendChild(this.renderer.domElement);
-
-        this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-
-        //this.cameracontrols = new THREE.OrbitControls(this.camera, this.renderer.domElement);
 
         var bodyGeo = new THREE.BoxGeometry(1, 1, 1);
         var limbGeo = new THREE.BoxGeometry(0.5, 1, 0.5);
@@ -105,99 +83,12 @@ export class Robot {
         this.body.add(this.legs);
         this.body.add(this.arms);
 
-        this.robot.add(this.body);
-
-        this.scene.add(this.robot);
-
-        var pointLight = new THREE.PointLight(0xffffff);
-        pointLight.position.set(0, 300, 200);
-        this.scene.add(pointLight);
-
-        var ambientLight = new THREE.AmbientLight(0x111111);
-        this.scene.add(ambientLight);
-
-        this.gcontrols = new function () {
-
-            this.translateX = 0.1;
-            this.translateY = 0.1;
-            this.translateZ = 0.1;
-            this.rotateX = 0.1;
-            this.rotateY = 0.1;
-            this.rotateZ = 0.1;
-            this.scaleX = 0.9;
-            this.scaleY = 0.9;
-            this.scaleZ = 0.9;
-
-
-        }
-
-        this.gui = new dat.GUI();
-        this.gui.add(this.gcontrols, 'translateX', -1.5, 1.5);
-        this.gui.add(this.gcontrols, 'translateY', -1.5, 1.5);
-        this.gui.add(this.gcontrols, 'translateZ', -1.5, 1.5);
-        this.gui.add(this.gcontrols, 'rotateX', -3.14, 3.14);
-        this.gui.add(this.gcontrols, 'rotateY', -3.14, 3.14);
-        this.gui.add(this.gcontrols, 'rotateZ', -3.14, 3.14);
-        this.gui.add(this.gcontrols, 'scaleX', 0.1, 2);
-        this.gui.add(this.gcontrols, 'scaleY', 0.1, 2);
-        this.gui.add(this.gcontrols, 'scaleZ', 0.1, 2);
-
-        this.sceneGraph = new Scenegraph2D(this.robot);
-        this.sceneGraph.init();
-        this.sceneGraph.show();
-
-
-        this.camera.position.z = 5;
-
-        this.render(this);
+        this.root.add(this.body);
 
     }
 
-    translate(mesh: THREE.Mesh, xyz: THREE.Vector3) {
-        mesh.position = new THREE.Vector3(0, 0, 0);
-        mesh.translateX(xyz.x);
-        mesh.translateY(xyz.y);
-        mesh.translateZ(xyz.z);
 
-        mesh.updateMatrix();
 
-    }
-
-    render(self: Robot) {
-
-        self.renderer.render(self.scene, self.camera);
-        self.update();
-
-        requestAnimationFrame(() => self.render(self));
-
-    }
-
-    update() {
-
-        if (this.sceneGraph.selectedNode != null) {
-            if (this.sceneGraph.selectedNode.updateControls) {
-                this.gcontrols.translateX = this.sceneGraph.selectedNode.threeObject.position.x;
-                this.gcontrols.translateY = this.sceneGraph.selectedNode.threeObject.position.y;
-                this.gcontrols.translateZ = this.sceneGraph.selectedNode.threeObject.position.z;
-                this.gcontrols.rotateX = this.sceneGraph.selectedNode.threeObject.rotation.x;
-                this.gcontrols.rotateY = this.sceneGraph.selectedNode.threeObject.rotation.y;
-                this.gcontrols.rotateZ = this.sceneGraph.selectedNode.threeObject.rotation.z;
-                this.gcontrols.scaleX = this.sceneGraph.selectedNode.threeObject.scale.x;
-                this.gcontrols.scaleY = this.sceneGraph.selectedNode.threeObject.scale.y;
-                this.gcontrols.scaleZ = this.sceneGraph.selectedNode.threeObject.scale.z;
-                for (var i in this.gui.__controllers) {
-                    this.gui.__controllers[i].updateDisplay();
-                }
-
-                this.sceneGraph.selectedNode.updateControls = false;
-            }
-            this.sceneGraph.selectedNode.threeObject.position.set(this.gcontrols.translateX, this.gcontrols.translateY, this.gcontrols.translateZ);
-            this.sceneGraph.selectedNode.threeObject.rotation.set(this.gcontrols.rotateX, this.gcontrols.rotateY, this.gcontrols.rotateZ);
-            this.sceneGraph.selectedNode.threeObject.scale.set(this.gcontrols.scaleX, this.gcontrols.scaleY, this.gcontrols.scaleZ);
-
-        }
-
-    }
 
 }
 

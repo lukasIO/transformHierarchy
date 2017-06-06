@@ -6,54 +6,38 @@
 
 connection {
     border: 5px solid #b51c29;
-    border-radius: 10px;
+    border-radius: 8px;
 }
 
 .circle {
 	border-radius: 50%;
-	width: 60px;
 	height: 60px; 
-    border: 1px dashed blue;
+    border: 60px dashed blue;
 	
 }
 
+
 .child {
+
     display: flex;
    
     
     border: 1px dashed blue; 
-    width: 40%;
+    width: 50%;
     height: 60px;
     margin: auto;
     margin-top: 80px;
-    
-
-    
-    
-    
-    /*float: left;
-    clear: both;*/
-    
-    
+        
 }
 
-.depth_1 {
 
+    
+.child:nth-child(even){
+    margin-left: 10px;
+    padding-right: 10px;
 }
-
-.depth_2 {
-
-}
-
-.depth_3 {
-
-
-}
-
-.depth_4 {
-
-}
-
-.depth_5 {
-
+.child:nth-child(odd){
+    margin-right: 10px;
+    padding-left: 10px;
+    
 }

@@ -128,22 +128,26 @@
         var to_node = data.node_to;
         var from = data.rect_from;
         var to = data.rect_to;
-        var b = (from.bottom + from.top) / 2;
+        var b = from.bottom;
         var r = (to.left + to.right) / 2;
-        var t = (to.bottom + to.top) / 2;
+        var t = (to.top + to.bottom) / 2;
         var l = (from.left + from.right) / 2;
 
         var h = ['right', 'left'];
+        var v = ['bottom', 'top'];
         if (l > r) {
             h = h.reverse();
             var x = Math.max(r - border_w / 2, Math.min(from.right, to.right));
             r = l + border_w / 2;
             l = x;
+
+
         } else {
             l -= border_w / 2;
             r = Math.min(r + border_w / 2, Math.max(from.left, to.left));
         }
-        var v = ['bottom', 'top'];
+
+
         if (t > b) {
             v = v.reverse();
             var x = Math.max(b - border_h / 2, Math.min(from.bottom, to.bottom));

@@ -1,3 +1,9 @@
+/*
+creates a HTML scenegraph from a THREEjs node hierarchy
+with click callbacks to select affected 3d tree
+*/
+
+
 import { SceneNode } from "scenenode";
 
 export class Scenegraph2D {
@@ -15,17 +21,12 @@ export class Scenegraph2D {
     selectedMat = new THREE.MeshLambertMaterial({ color: 0xff00ff });
 
 
-
     init() {
         this.graph = this.traverseGraph(this._root, 0);
 
         this.container.classList.add("graphContainer");
         this.container.id = "graph";
         document.body.appendChild(this.container);
-
-
-
-
 
     }
 
@@ -41,7 +42,7 @@ export class Scenegraph2D {
             node.threeObject = child;
             node.children = this.traverseGraph(child, depth);
 
-            console.log(child.type);
+
             switch (child.type) {
                 case "Mesh": //mesh node
                     node.transformType = 0;
@@ -58,17 +59,12 @@ export class Scenegraph2D {
                     break;
             }
 
-
             children.push(node);
 
         }
         );
 
-
         return children;
-
-
-
 
     }
 
@@ -92,10 +88,8 @@ export class Scenegraph2D {
     }
 
     createGraphRecursive(_nodes: SceneNode[], _parent: HTMLElement) {
-        let first: boolean = true;
+
         _nodes.forEach((node) => {
-            console.log(node.depth);
-            console.log(node);
 
 
             let el: HTMLButtonElement = document.createElement('button');
@@ -121,11 +115,9 @@ export class Scenegraph2D {
 
             });
 
-            first = false;
+
             _parent.appendChild(el);
             $(_parent).connections({ to: $(el) });
-
-
 
             this.createGraphRecursive(node.children, el);
 
@@ -136,7 +128,7 @@ export class Scenegraph2D {
         if (obj.type == "Mesh") {
             let mesh = obj as THREE.Mesh;
             mesh.material = material;
-        }
+        };
         obj.children.forEach((child) => {
             if (child.type == "Mesh") {
                 let mesh = child as THREE.Mesh;
@@ -145,12 +137,6 @@ export class Scenegraph2D {
             this.setMaterial(child, material);
 
         });
-
-    }
-
-    lineToChild() {
-
-
 
     }
 
