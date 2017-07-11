@@ -1,5 +1,5 @@
 //file config.ts
-require.config({
+requirejs.config({
     baseUrl: 'js',
     paths: {
         'jquery': './lib/jquery-3.1.1'
@@ -12,7 +12,7 @@ require.config({
 });
 // load AMD module main.ts (compiled to main.js)
 // and include shims $, _, Backbone
-require(['main'], function (main, $) {
+requirejs(['main'], function (main, $) {
     var app = new main.Main();
     app.run();
 });

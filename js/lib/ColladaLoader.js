@@ -1041,8 +1041,11 @@ THREE.ColladaLoader = function () {
 	}
 
 	function createSceneGraph(node, parent) {
-
-		var obj = new THREE.Object3D();
+		var obj;
+		if (node.geometries.length == 0)
+			obj = new THREE.Group();
+		else
+			obj = new THREE.Object3D();
 		var skinned = false;
 		var skinController;
 		var morphController;

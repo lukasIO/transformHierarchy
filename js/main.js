@@ -2,12 +2,12 @@ define(["require", "exports", "robot", "transformHierarchy", "lib/three", "lib/C
     "use strict";
     var Main = (function () {
         function Main() {
-            this.fromFile = false;
+            this.fromFile = true;
         }
         Main.prototype.run = function () {
             console.log("starting");
             if (this.fromFile) {
-                this.loadModelFromFile('./js/monster.dae');
+                this.loadModelFromFile('./geo/robot.dae');
             }
             else {
                 var botModel = new robot_1.Robot();
@@ -19,11 +19,11 @@ define(["require", "exports", "robot", "transformHierarchy", "lib/three", "lib/C
             loader.options.convertUpAxis = true;
             loader.load(path, function (collada) {
                 var dae = collada.scene;
-                dae.scale.x = dae.scale.y = dae.scale.z = 0.002;
+                dae.scale.x = dae.scale.y = dae.scale.z = 0.01;
                 dae.updateMatrix();
                 var rootObj = new THREE.Group();
                 rootObj.add(dae);
-                var hierarchy = new transformHierarchy_1.TransformHierarchy(rootObj);
+                var hierarchy = new transformHierarchy_1.TransformHierarchy(dae);
             });
         };
         Main.prototype.updatePosition = function (index) {

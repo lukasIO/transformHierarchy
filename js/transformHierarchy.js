@@ -10,10 +10,12 @@ define(["require", "exports", "lib/dat.gui.min", "scenegraph", "lib/three", "lib
         TransformHierarchy.prototype.create = function (model) {
             //initialize components
             this.scene = new THREE.Scene();
-            this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / (2 * window.innerHeight), 0.1, 1000);
             this.renderer = new THREE.WebGLRenderer();
-            this.renderer.setSize(window.innerWidth / 2, window.innerHeight / 2);
-            document.body.appendChild(this.renderer.domElement);
+            this.renderer.setSize(window.innerWidth / 2, window.innerHeight);
+            var contentWrapper = document.getElementById("contentwrapper");
+            this.renderer.domElement.id = "canvas";
+            contentWrapper.appendChild(this.renderer.domElement);
             //this.cameracontrols = new THREE.OrbitControls(this.camera, this.renderer.domElement);
             this.scene.add(model);
             var pointLight = new THREE.PointLight(0xffffff);

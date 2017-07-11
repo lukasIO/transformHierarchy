@@ -20,13 +20,34 @@ export class Scenegraph2D {
     unselectedMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
     selectedMat = new THREE.MeshLambertMaterial({ color: 0xff00ff });
 
+    lines = jsPlumb; //reference to line library, globally added in html
+    commonLine; //object for shared line settings
+
+
 
     init() {
         this.graph = this.traverseGraph(this._root, 0);
 
         this.container.classList.add("graphContainer");
         this.container.id = "graph";
-        document.body.appendChild(this.container);
+        //this.container.style.width = "50%";
+        //this.container.style.height = "100%";
+        var contentWrapper = document.getElementById("contentwrapper");
+        contentWrapper.appendChild(this.container);
+        this.lines.importDefaults({
+            ConnectionsDetachable: false
+        });
+        this.commonLine = {
+            anchors: ["BottomCenter", "TopCenter"],
+            endpoint: "Blank",
+            connector: ["StateMachine", { curviness: 5 }]
+        };
+
+        var self = this;
+
+        window.onresize = () => function () {
+            self.lines.repaintEverything();
+        }
 
     }
 
@@ -73,9 +94,10 @@ export class Scenegraph2D {
 
 
         //this.printGraphRecursive(this.graph);
-        this.createGraphRecursive(this.graph, this.container);
+        this.createGraphRecursive(this.graph, this.container, true);
 
-        $('.child').connections('update');
+        //$('.child').connections('update');
+        jsPlumb.repaintEverything();
 
     }
 
@@ -87,18 +109,31 @@ export class Scenegraph2D {
         });
     }
 
-    createGraphRecursive(_nodes: SceneNode[], _parent: HTMLElement) {
+    createGraphRecursive(_nodes: SceneNode[], _parent: HTMLElement, isRoot = false) {
 
         _nodes.forEach((node) => {
 
 
-            let el: HTMLButtonElement = document.createElement('button');
-            el.innerHTML = String(node.transformType);
+            let el: HTMLDivElement = document.createElement('div');
+            el.innerHTML = String(node.threeObject.name);
             if (node.transformType == 2) {
-                el.classList.add("circle")
+                el.classList.add("graphButtonGroup");
+            }
+            else {
+                el.classList.add("graphButton")
             }
             el.classList.add("child");
-            el.classList.add("depth_" + node.depth);
+
+            //el.style.paddingRight = ((node.children.length - 1) * 55) + "px";
+
+            let childrenContainer: HTMLDivElement = document.createElement("div");
+            //childrenContainer.style.width = (node.children.length * 55) + "px";
+
+            childrenContainer.classList.add("childrenContainer");
+
+            //el.classList.add("depth_" + node.depth);
+
+            //el.style.width = (100 / node.children.length) + "%";
 
             el.addEventListener('click', (event) => {
 
@@ -115,11 +150,21 @@ export class Scenegraph2D {
 
             });
 
+            childrenContainer.appendChild(el);
+            _parent.appendChild(childrenContainer);
 
-            _parent.appendChild(el);
-            $(_parent).connections({ to: $(el) });
+            //$(_parent).connections({ to: $(el) });
+            if (!isRoot) {
+                this.lines.connect(
+                    {
+                        source: _parent.firstChild,
+                        target: el
 
-            this.createGraphRecursive(node.children, el);
+                    }, this.commonLine
+                );
+            }
+
+            this.createGraphRecursive(node.children, childrenContainer);
 
         });
     }

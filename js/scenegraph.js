@@ -10,13 +10,29 @@ define(["require", "exports", "scenenode"], function (require, exports, scenenod
             this.container = document.createElement("div");
             this.unselectedMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
             this.selectedMat = new THREE.MeshLambertMaterial({ color: 0xff00ff });
+            this.lines = jsPlumb; //reference to line library, globally added in html
             this._root = root;
         }
         Scenegraph2D.prototype.init = function () {
             this.graph = this.traverseGraph(this._root, 0);
             this.container.classList.add("graphContainer");
             this.container.id = "graph";
-            document.body.appendChild(this.container);
+            //this.container.style.width = "50%";
+            //this.container.style.height = "100%";
+            var contentWrapper = document.getElementById("contentwrapper");
+            contentWrapper.appendChild(this.container);
+            this.lines.importDefaults({
+                ConnectionsDetachable: false
+            });
+            this.commonLine = {
+                anchors: ["BottomCenter", "TopCenter"],
+                endpoint: "Blank",
+                connector: ["StateMachine", { curviness: 5 }]
+            };
+            var self = this;
+            window.onresize = function () { return function () {
+                self.lines.repaintEverything();
+            }; };
         };
         Scenegraph2D.prototype.traverseGraph = function (obj, depth) {
             var _this = this;
@@ -47,8 +63,9 @@ define(["require", "exports", "scenenode"], function (require, exports, scenenod
         };
         Scenegraph2D.prototype.show = function () {
             //this.printGraphRecursive(this.graph);
-            this.createGraphRecursive(this.graph, this.container);
-            $('.child').connections('update');
+            this.createGraphRecursive(this.graph, this.container, true);
+            //$('.child').connections('update');
+            jsPlumb.repaintEverything();
         };
         Scenegraph2D.prototype.printGraphRecursive = function (_nodes) {
             var _this = this;
@@ -58,16 +75,25 @@ define(["require", "exports", "scenenode"], function (require, exports, scenenod
                 _this.printGraphRecursive(node.children);
             });
         };
-        Scenegraph2D.prototype.createGraphRecursive = function (_nodes, _parent) {
+        Scenegraph2D.prototype.createGraphRecursive = function (_nodes, _parent, isRoot) {
             var _this = this;
+            if (isRoot === void 0) { isRoot = false; }
             _nodes.forEach(function (node) {
-                var el = document.createElement('button');
-                el.innerHTML = String(node.transformType);
+                var el = document.createElement('div');
+                el.innerHTML = String(node.threeObject.name);
                 if (node.transformType == 2) {
-                    el.classList.add("circle");
+                    el.classList.add("graphButtonGroup");
+                }
+                else {
+                    el.classList.add("graphButton");
                 }
                 el.classList.add("child");
-                el.classList.add("depth_" + node.depth);
+                //el.style.paddingRight = ((node.children.length - 1) * 55) + "px";
+                var childrenContainer = document.createElement("div");
+                //childrenContainer.style.width = (node.children.length * 55) + "px";
+                childrenContainer.classList.add("childrenContainer");
+                //el.classList.add("depth_" + node.depth);
+                //el.style.width = (100 / node.children.length) + "%";
                 el.addEventListener('click', function (event) {
                     _this.selectedNode = node;
                     _this.selectedNode.updateControls = true;
@@ -78,9 +104,16 @@ define(["require", "exports", "scenenode"], function (require, exports, scenenod
                     _this.setMaterial(_this._root, _this.unselectedMat);
                     _this.setMaterial(_this.selectedNode.threeObject, _this.selectedMat);
                 });
-                _parent.appendChild(el);
-                $(_parent).connections({ to: $(el) });
-                _this.createGraphRecursive(node.children, el);
+                childrenContainer.appendChild(el);
+                _parent.appendChild(childrenContainer);
+                //$(_parent).connections({ to: $(el) });
+                if (!isRoot) {
+                    _this.lines.connect({
+                        source: _parent.firstChild,
+                        target: el
+                    }, _this.commonLine);
+                }
+                _this.createGraphRecursive(node.children, childrenContainer);
             });
         };
         Scenegraph2D.prototype.setMaterial = function (obj, material) {
