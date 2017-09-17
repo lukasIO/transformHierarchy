@@ -4,43 +4,40 @@
     
 }
 
+connection {
+    border: 5px solid #b51c29;
+    border-radius: 8px;
+}
+
+.circle {
+	border-radius: 50%;
+	height: 60px; 
+    border: 60px dashed blue;
+	
+}
+
+
 .child {
+
     display: flex;
    
-    background-color: red;
+    
     border: 1px dashed blue; 
-    width: 40%;
-    height: 30px;
+    width: 50%;
+    height: 60px;
     margin: auto;
-    margin-top: 50px;
-    
-
-    
-    
-    
-    /*float: left;
-    clear: both;*/
-    
-    
+    margin-top: 80px;
+        
 }
 
-.depth_1 {
 
+    
+.child:nth-child(even){
+    margin-left: 10px;
+    padding-right: 10px;
 }
-
-.depth_2 {
-
-}
-
-.depth_3 {
-
-
-}
-
-.depth_4 {
-
-}
-
-.depth_5 {
-
+.child:nth-child(odd){
+    margin-right: 10px;
+    padding-left: 10px;
+    
 }

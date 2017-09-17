@@ -9,6 +9,11 @@ export class SceneNode {
     depth: number = 0;
     transformType: number = 0;
     threeObject: THREE.Object3D;
+    updateControls: boolean = false;
+
+
 
 }
+
+
 
