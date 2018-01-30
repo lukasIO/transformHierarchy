@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
-    var SceneNode = (function () {
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var SceneNode = /** @class */ (function () {
         function SceneNode(hierarchydepth) {
             this.isActive = false;
             this.hasTransform = false;

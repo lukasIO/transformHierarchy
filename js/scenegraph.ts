@@ -22,6 +22,7 @@ export class Scenegraph2D {
 
 
     init() {
+
         this.graph = this.traverseGraph(this._root, 0);
 
         this.container.classList.add("graphContainer");
@@ -49,9 +50,11 @@ export class Scenegraph2D {
                     break;
                 case "Object3D": //used as a transform node
                     node.transformType = 1;
+                    children.push(node);
                     break;
                 case "Group": //group node
                     node.transformType = 2;
+                    children.push(node);
                     break;
 
                 default:
@@ -59,7 +62,7 @@ export class Scenegraph2D {
                     break;
             }
 
-            children.push(node);
+
 
         }
         );
@@ -75,7 +78,7 @@ export class Scenegraph2D {
         //this.printGraphRecursive(this.graph);
         this.createGraphRecursive(this.graph, this.container);
 
-        $('.child').connections('update');
+        // $('.child').connections('update');
 
     }
 
@@ -89,16 +92,34 @@ export class Scenegraph2D {
 
     createGraphRecursive(_nodes: SceneNode[], _parent: HTMLElement) {
 
+        // //treantTry
+        // var treantConfig = {
+        //     chart: {
+        //         container: "#graph"
+        //     },
+
+        //     nodeStructure: {
+        //     }
+        // };
+
+        // _nodes.forEach((node) => {
+        //     let el = { 
+        //         text: node.transformType.toString(),
+        //         onCreateNode: function(node, tree){ console.log("on create Test")}
+        //         children: [
+
+        //         ]
+        //     }
+        // }
+
         _nodes.forEach((node) => {
 
 
-            let el: HTMLButtonElement = document.createElement('button');
+            let el: HTMLDivElement = document.createElement('div');
             el.innerHTML = String(node.transformType);
-            if (node.transformType == 2) {
-                el.classList.add("circle")
-            }
             el.classList.add("child");
             el.classList.add("depth_" + node.depth);
+
 
             el.addEventListener('click', (event) => {
 
@@ -117,7 +138,9 @@ export class Scenegraph2D {
 
 
             _parent.appendChild(el);
-            $(_parent).connections({ to: $(el) });
+            // $(_parent).connections({ to: $(el) });
+            //jsPlumb.connect({ source: _parent, target: el });
+
 
             this.createGraphRecursive(node.children, el);
 

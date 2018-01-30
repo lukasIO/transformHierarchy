@@ -1,6 +1,7 @@
 define(["require", "exports", "lib/dat.gui.min", "scenegraph", "lib/three", "lib/OrbitControls"], function (require, exports, dat, scenegraph_1) {
     "use strict";
-    var TransformHierarchy = (function () {
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var TransformHierarchy = /** @class */ (function () {
         function TransformHierarchy(model) {
             this.gui = null;
             this.gcontrols = null;
@@ -10,9 +11,12 @@ define(["require", "exports", "lib/dat.gui.min", "scenegraph", "lib/three", "lib
         TransformHierarchy.prototype.create = function (model) {
             //initialize components
             this.scene = new THREE.Scene();
-            this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            this.camera = new THREE.PerspectiveCamera(75, window.innerWidth * 0.5 / window.innerHeight, 0.1, 1000);
             this.renderer = new THREE.WebGLRenderer();
-            this.renderer.setSize(window.innerWidth / 2, window.innerHeight / 2);
+            this.renderer.setSize(window.innerWidth / 2, window.innerHeight);
+            this.renderer.domElement.style.position = "absolute";
+            this.renderer.domElement.style.left = "0px";
+            this.renderer.domElement.style.top = "0px";
             document.body.appendChild(this.renderer.domElement);
             //this.cameracontrols = new THREE.OrbitControls(this.camera, this.renderer.domElement);
             this.scene.add(model);
@@ -42,9 +46,9 @@ define(["require", "exports", "lib/dat.gui.min", "scenegraph", "lib/three", "lib
                 this.scaleZ = 0.9;
             };
             this.gui = new dat.GUI();
-            this.gui.add(this.gcontrols, 'translateX', -1.5, 1.5);
-            this.gui.add(this.gcontrols, 'translateY', -1.5, 1.5);
-            this.gui.add(this.gcontrols, 'translateZ', -1.5, 1.5);
+            this.gui.add(this.gcontrols, 'translateX', -150.5, 150.5);
+            this.gui.add(this.gcontrols, 'translateY', -150.5, 150.5);
+            this.gui.add(this.gcontrols, 'translateZ', -150.5, 150.5);
             this.gui.add(this.gcontrols, 'rotateX', -3.14, 3.14);
             this.gui.add(this.gcontrols, 'rotateY', -3.14, 3.14);
             this.gui.add(this.gcontrols, 'rotateZ', -3.14, 3.14);

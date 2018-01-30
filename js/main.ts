@@ -1,17 +1,18 @@
 import "lib/three";
 import "lib/ColladaLoader";
+import "lib/jsplumb";
 import { Robot } from "robot";
 import { TransformHierarchy } from "transformHierarchy";
 
 export class Main {
 
-    fromFile: boolean = false;
+    fromFile: boolean = true;
 
     run() {
         console.log("starting");
 
         if (this.fromFile) {
-            this.loadModelFromFile('./js/monster.dae');
+            this.loadModelFromFile('./js/robot.dae');
         }
         else {
             var botModel = new Robot();
@@ -25,9 +26,11 @@ export class Main {
         loader.options.convertUpAxis = true;
         loader.load(path, function (collada) {
             let dae = collada.scene;
-            dae.scale.x = dae.scale.y = dae.scale.z = 0.002;
+            dae.scale.x = dae.scale.y = dae.scale.z = 1;
             dae.updateMatrix();
             var rootObj = new THREE.Group();
+            rootObj.scale.x = rootObj.scale.y = rootObj.scale.z = 0.01;
+            rootObj.updateMatrix();
             rootObj.add(dae);
 
             var hierarchy = new TransformHierarchy(rootObj);

@@ -4,7 +4,8 @@ with click callbacks to select affected 3d tree
 */
 define(["require", "exports", "scenenode"], function (require, exports, scenenode_1) {
     "use strict";
-    var Scenegraph2D = (function () {
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Scenegraph2D = /** @class */ (function () {
         function Scenegraph2D(root) {
             this.graph = [];
             this.container = document.createElement("div");
@@ -28,27 +29,28 @@ define(["require", "exports", "scenenode"], function (require, exports, scenenod
                 node.threeObject = child;
                 node.children = _this.traverseGraph(child, depth);
                 switch (child.type) {
-                    case "Mesh":
+                    case "Mesh"://mesh node
                         node.transformType = 0;
                         break;
-                    case "Object3D":
+                    case "Object3D"://used as a transform node
                         node.transformType = 1;
+                        children.push(node);
                         break;
-                    case "Group":
+                    case "Group"://group node
                         node.transformType = 2;
+                        children.push(node);
                         break;
                     default:
                         node.transformType = -1;
                         break;
                 }
-                children.push(node);
             });
             return children;
         };
         Scenegraph2D.prototype.show = function () {
             //this.printGraphRecursive(this.graph);
             this.createGraphRecursive(this.graph, this.container);
-            $('.child').connections('update');
+            // $('.child').connections('update');
         };
         Scenegraph2D.prototype.printGraphRecursive = function (_nodes) {
             var _this = this;
@@ -59,13 +61,26 @@ define(["require", "exports", "scenenode"], function (require, exports, scenenod
             });
         };
         Scenegraph2D.prototype.createGraphRecursive = function (_nodes, _parent) {
+            // //treantTry
+            // var treantConfig = {
+            //     chart: {
+            //         container: "#graph"
+            //     },
             var _this = this;
+            //     nodeStructure: {
+            //     }
+            // };
+            // _nodes.forEach((node) => {
+            //     let el = { 
+            //         text: node.transformType.toString(),
+            //         onCreateNode: function(node, tree){ console.log("on create Test")}
+            //         children: [
+            //         ]
+            //     }
+            // }
             _nodes.forEach(function (node) {
-                var el = document.createElement('button');
+                var el = document.createElement('div');
                 el.innerHTML = String(node.transformType);
-                if (node.transformType == 2) {
-                    el.classList.add("circle");
-                }
                 el.classList.add("child");
                 el.classList.add("depth_" + node.depth);
                 el.addEventListener('click', function (event) {
@@ -79,7 +94,8 @@ define(["require", "exports", "scenenode"], function (require, exports, scenenod
                     _this.setMaterial(_this.selectedNode.threeObject, _this.selectedMat);
                 });
                 _parent.appendChild(el);
-                $(_parent).connections({ to: $(el) });
+                // $(_parent).connections({ to: $(el) });
+                //jsPlumb.connect({ source: _parent, target: el });
                 _this.createGraphRecursive(node.children, el);
             });
         };

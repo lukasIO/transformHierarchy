@@ -1,6 +1,7 @@
 define(["require", "exports", "lib/three"], function (require, exports) {
     "use strict";
-    var Robot = (function () {
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Robot = /** @class */ (function () {
         function Robot() {
             //robot parts 
             this.root = new THREE.Group();
